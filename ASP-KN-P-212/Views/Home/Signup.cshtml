@@ -1,0 +1,123 @@
+﻿@model ASP_KN_P_212.Models.Home.Signup.SignupPageModel
+@{
+    ViewData["Title"] = "Реєстрація";
+    bool isFormInvalid =
+        Model.FormModel?.HasData == true && Model.ValidationErrors?.Count > 0;
+    bool isSignupSuccess = 
+        Model.FormModel?.HasData == true && Model.ValidationErrors?.Count == 0;
+    Dictionary<String, String> classes = new();
+    foreach (String key in new String[] { "UserName", "UserEmail", "UserBirthdate" })
+    {
+        classes[key] = isFormInvalid ?
+            (Model.ValidationErrors?.ContainsKey(key) ?? false
+                ? "is-invalid"
+                : "is-valid")
+            : "";
+    }
+    /*
+    String nameClass = isFormInvalid ? 
+            (Model.ValidationErrors?.ContainsKey("UserName") ?? false 
+                ? "is-invalid" 
+                : "is-valid")
+            : "";
+    String emailClass = isFormInvalid ?
+    (Model.ValidationErrors?.ContainsKey("UserEmail") ?? false
+        ? "is-invalid"
+        : "is-valid")
+    : "";*/
+}
+
+<div class="text-center">
+    <h1 class="display-4">Реєстрація нового користувача</h1>
+</div>
+
+@if (isFormInvalid)
+{
+    <div class="alert alert-danger" role="alert">
+        Виникли проблеми з перевіркою даних форми 
+    </div>
+}
+@if (isSignupSuccess)
+{
+    <div class="alert alert-success" role="alert">
+        Ви успішно зареєстровані
+    </div>
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="user-name"><i class="bi bi-person-vcard"></i></span>
+                <input type="text" class="form-control @classes["UserName"]"
+                       placeholder="Username" name="user-name"
+                       value="@(isFormInvalid ? Model.FormModel!.UserName : "")"
+                       aria-label="Username" aria-describedby="user-name">
+                <div class="invalid-feedback">Ім'я не може бути порожнім</div>
+            </div>            
+        </div>
+        <div class="col">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="user-email"><i class="bi bi-envelope-at"></i></span>
+                <input type="text" class="form-control @classes["UserEmail"]"
+                       name="user-email" placeholder="Email"
+                       value="@(isFormInvalid ? Model.FormModel!.UserEmail : "")"
+                       aria-label="Email" aria-describedby="user-email">
+                <div class="invalid-feedback">Пошта не може бути порожньою</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="user-password"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" placeholder="Пароль"
+                       name="user-password"
+                       aria-label="User-password" aria-describedby="user-password">
+            </div>
+        </div>
+        <div class="col">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="user-repeat"><i class="bi bi-unlock"></i></span>
+                <input type="password" class="form-control" placeholder="Повторіть пароль"
+                       name="user-repeat"
+                       aria-label="Repeat" aria-describedby="user-repeat">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="user-birthdate"><i class="bi bi-cake2"></i></span>
+                <input type="date" class="form-control @classes["UserBirthdate"]"
+                       name="user-birthdate"
+                       value="@(isFormInvalid ? Model.FormModel!.UserBirthdate.ToString("yyyy-MM-dd") : "")"
+                       aria-label="User-birthdate" aria-describedby="user-birthdate">
+            </div>
+        </div>
+        <div class="col">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="user-avatar"><i class="bi bi-person-circle"></i></label>
+                <input type="file" class="form-control" name="user-avatar" id="user-avatar">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       value="true" name="user-agreement" id="agreement">
+                <label class="form-check-label" for="agreement">
+                    Погоджуюсь із правилами сайту
+                </label>
+            </div>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-secondary"
+                name="signup-button" value="true" >Реєстрація</button>
+        </div>
+    </div>
+</form>

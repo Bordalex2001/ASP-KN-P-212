@@ -1,0 +1,14 @@
+﻿@model ASP_KN_P_212.Data.Entities.Room
+
+<div class="col">
+    <div class="card  h-100">
+        <a asp-action="Room" asp-route-id="@(Model.Slug)">
+            <img src="~/images/content/@(Model.PhotoUrl ?? "no-image.jpg")" class="card-img-top" alt="image">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Name</h5>
+                <p class="card-text">@Model.Description</p>
+                <b class="float-end">₴ @(Model.DailyPrice.ToString("F2"))</b>
+            </div>
+        </a>
+    </div>
+</div>

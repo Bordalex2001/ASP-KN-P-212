@@ -1,0 +1,10 @@
+﻿@model ASP_KN_P_212.Models.Content.Category.ContentCategoryPageModel
+@{
+    Layout = "_ContentLayout";
+}
+<h1>@Model.Category.Name</h1>
+
+@foreach(var location in Model.Locations)
+{
+    @Html.DisplayFor(m => location, "LocationTemplate")
+}

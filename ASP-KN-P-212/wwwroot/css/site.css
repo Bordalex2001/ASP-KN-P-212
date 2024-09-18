@@ -1,0 +1,87 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.intro-img {
+    width: 250px;
+}
+
+.random, .random th, .random td {
+    border: 2px solid;
+}
+.random th {
+    text-align: center;
+}
+.random caption{
+    text-align: center;
+    caption-side: top;
+}
+
+.modal-footer {
+    justify-content: space-between !important;
+}
+.spacer {
+    flex: 1;
+}
+.size-40 {
+    max-width: 40px;
+    max-height: 40px;
+}
+.sub-header {
+    background: url(/images/header.jpg) no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 25vh;
+    min-height: 250px;
+}
+.card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.calendar {
+    border: 1px solid gray;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.calendar-item {
+    border: 1px solid gray;
+    text-align: center;
+    width: 14.286%;
+}
+
+.item-free {
+    color: greenyellow;
+}
+
+.item-past {
+    color: gray;
+}
+
+.item-reserved {
+    color: hotpink;
+}
+
+.item-auth {
+    cursor: pointer;
+}

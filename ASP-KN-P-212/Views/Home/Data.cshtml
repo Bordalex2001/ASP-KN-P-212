@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "Робота з БД";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Робота з даними. Підключення БД</h1>
+</div>
+<h2>Пакети</h2>
+<p>
+    Використовуємо Entity Framework, відповідно маємо додати 
+    пакети NuGet
+</p>
+<ul>
+    <li>Microsoft.EntityFrameworkCore - ядро фреймворку, основні засоби</li>
+    <li>Microsoft.EntityFrameworkCore.Tools - інструменти управління міграціями</li>
+    <li>Драйвер БД: у залежності від СУБД - 
+        для MSSQL: Microsoft.EntityFrameworkCore.SqlServer
+        MySQL: Pomelo.EntityFrameworkCore.MySql
+    </li>
+</ul>
+<h2>Структура</h2>
+<ul>
+    <li>Створюємо в корені проєкту папку Data, у ній - клас DataContext</li>
+    <li>Реалізуємо рядок підключення до БД. MSSQL може створювати БД,
+        відповідно можна створити рядок до поки що неіснуючої БД. 
+        MySQL - краще створити БД, але залишити порожньою. Рядки підключення 
+        вміщують до appsettings.json у спеціальну секцію "ConnectionStrings"
+    </li>
+    <li>Створюємо папку Data/Entities, у ній клас - User</li>
+    
+</ul>
+<h2>Перевірка</h2>
+<p>
+    Контекст реєструється у сервісах, відповідно може інжектуватись як й 
+    інші сервіси (див. HomeController).
+    Звертаючись до сервісу вилучаємо дані і передаємо до представлення: 
+    Кількість зареєстрованих користувачів - <b>@ViewData["users-count"]</b>
+</p>
+Д.З. Створити сторінку з алгоритмом підключення EF Core до ASP проєкту
+Прикласти її скріншот
+
+<h2>Підключення Entity Framework Core</h2>
+<p>Підключення <b>EF Core</b> до ASP.NET відбувається за наступним алгоритмом:</p>
+<ol>
+    <li>Установити необхідні пакети чи компоненти</li>
+        <ol>
+            <li>Відкрити проєкт у <b>Visual Studio</b> або у будь-якій <b>C# IDE</b> на ваш вибір</li>
+            <li>Відкрити <b>Package Manager Console</b> ("Tools" > "NuGet Package Manager" > "Package Manager Console").</li>
+            <li>Установити пакети <b>Entity Framework Core</b>, використовуючи наступні команди:<br />
+                <code>Install-Package Microsoft.EntityFrameworkCore</code><br />
+                <code>Install-Package Microsoft.EntityFrameworkCore.SqlServer</code><br />
+                <code>Install-Package Microsoft.EntityFrameworkCore.Tools</code>
+            </li>
+        </ol>
+    <li>Створити контекст даних</li>
+        <ol>
+            <li>
+                Додати новий класс до вашого проєкту, наприклад "AppDbContext":
+                <code>
+                    <pre>
+    using Microsoft.EntityFrameworkCore;
+
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options) : base(options) { }
+
+        public DbSet&lt;YourEntity&gt; YourEntities { get; set; }
+    }
+                    </pre>
+                </code>
+            </li>
+            <li>Замінити "YourEntity" на сутність, яку ви хотіли б зіставити з таблицею бази даних.</li>
+        </ol>
+    <li>Додати та налаштувати рядок підключення</li>
+        <ol>
+            <li>
+                Знайти та відкрити файл "appsettings.json" та додати рядок підключення. Наприклад:
+                <code>
+                    <pre>
+    {
+        "ConnectionStrings": {
+            "DefaultConnection": "Server=ім'я_сервера;Database=ім'я_бази_даних;User Id=ім'я_користувача;Password=пароль_користувача;"
+        }
+    }
+                    </pre>
+                </code>
+            </li>
+        </ol>
+    <li>Зареєструвати <b>DbContext</b> в контейнері інжекції залежностей</li>
+        <ol>
+            <li>
+                Відкрити файл "Startup.cs" або "Program.cs" та додати наступні рядки коду, наприклад, у метод "ConfigureServices":
+                <code>
+                    <pre>
+    using Microsoft.EntityFrameworkCore;
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddDbContext&lt;AppDbContext&gt;(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddControllersWithViews();
+    }
+                    </pre>
+                </code>
+            </li>
+        </ol>
+    <li>Створити вашу сутність</li>
+        <ol>
+            <li>
+                Створити класс, який презентує вашу таблицю бази даних:
+                <code>
+                    <pre>
+    public class YourEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        //Сюди додати інші властивості
+    }
+                    </pre>
+                </code>
+            </li>
+        </ol>
+    <li>Додати міграцію та оновити базу даних</li>
+        <ol>
+            <li>
+                Відкрити <b>Package Manager Console</b> та виконати наступні команди:<br />
+                <code>Add-Migration InitialCreate</code><br />
+                <code>Update-Database</code>
+            </li>
+            <ul>
+                <li>"<code>Add-Migration InitialCreate</code>" створює нову міграцію "InitialCreate"</li>
+                <li>"<code>Update-Database</code>" застосовує міграцію до бази даних</li>
+            </ul>
+        </ol>
+    <li>Використовувати <b>DbContext</b> у вашому контролері</li>
+        <ol>
+            <li>
+                Інжектувати "AppDbContext" у ваш контролер:
+                <code>
+                    <pre>
+    public class YourController : Controller
+    {
+        private readonly AppDbContext _context;
+
+        public YourController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        //Сюди додати дії, які використовують змінну _context для взаємодії з базою даних
+    }
+                    </pre>
+                </code>
+            </li>
+        </ol>
+</ol>
